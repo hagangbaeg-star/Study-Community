@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>📋 게시판</h1>
+
+<form action="/board" method="GET">
+
+<input
+type="text"
+name="search"
+placeholder="제목 검색">
+
+<button>검색</button>
+
+</form>
+
+<br>
+
+<table>
+
+<tr>
+
+<th>번호</th>
+<th>제목</th>
+<th>작성자</th>
+<th>작성일</th>
+
+</tr>
+
+<% posts.forEach(post=>{ %>
+
+<tr>
+
+<td><%= post.id %></td>
+
+<td>
+
+<a href="/post/<%= post.id %>">
+
+<%= post.title %>
+
+</a>
+
+</td>
+
+<td>
+
+<%= post.writer %>
+
+</td>
+
+<td>
+
+<%= post.created_at.toLocaleDateString() %>
+
+</td>
+
+</tr>
+
+<% }) %>
+
+</table>
+
+<br>
+
+<a href="/write">
+
+<button>글쓰기</button>
+
+</a>
+
+<a href="/">
+
+<button>메인</button>
+
+</a>
+
+</div>
+
+</div>
+
+</body>
+<div class="navbar">
+
+<div class="nav-container">
+
+<div class="logo">
+
+📚 STUDY COMMUNITY
+
+</div>
+
+<div class="menu">
+
+<a href="/">메인</a>
+
+<a href="/board">게시판</a>
+
+<% if(user){ %>
+
+<a href="/logout">
+
+로그아웃
+
+</a>
+
+<% } %>
+
+</div>
+
+</div>
+
+</div>
+</html>

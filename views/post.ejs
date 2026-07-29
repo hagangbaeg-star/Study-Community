@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title><%= post.title %></title>
+
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="card post-box">
+
+<div class="post-title">
+<%= post.title %>
+</div>
+
+<div class="post-info">
+
+작성자 :
+<strong><%= post.writer %></strong>
+
+|
+
+작성일 :
+<%= post.created_at.toLocaleString() %>
+
+</div>
+
+<hr>
+
+<div class="post-content">
+
+<%= post.content %>
+
+</div>
+
+<div class="btn-group">
+
+<% if(user && user.username===post.writer){ %>
+
+<a href="/edit/<%= post.id %>">
+
+<button>수정</button>
+
+</a>
+
+<form
+action="/delete/<%= post.id %>"
+method="POST"
+style="display:inline;">
+
+<button>
+
+삭제
+
+</button>
+
+</form>
+
+<% } %>
+
+<a href="/board">
+
+<button>목록</button>
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+<div class="navbar">
+
+<div class="nav-container">
+
+<div class="logo">
+
+📚 STUDY COMMUNITY
+
+</div>
+
+<div class="menu">
+
+<a href="/">메인</a>
+
+<a href="/board">게시판</a>
+
+<% if(user){ %>
+
+<a href="/logout">
+
+로그아웃
+
+</a>
+
+<% } %>
+
+</div>
+
+</div>
+
+</div>
+</html>

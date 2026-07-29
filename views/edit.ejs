@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+
+<meta charset="UTF-8">
+
+<title>글 수정</title>
+
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1 class="edit-title">
+
+✏️ 게시글 수정
+
+</h1>
+
+<form action="/edit/<%= post.id %>" method="POST">
+
+<input
+type="text"
+name="title"
+value="<%= post.title %>"
+required>
+
+<br><br>
+
+<textarea
+name="content"
+rows="15"
+required><%= post.content %></textarea>
+
+<br><br>
+
+<button>
+
+수정 완료
+
+</button>
+
+</form>
+
+<br>
+
+<a href="/post/<%= post.id %>">
+
+<button>
+
+취소
+
+</button>
+
+</a>
+
+</div>
+
+</div>
+
+</body>
+<div class="navbar">
+
+<div class="nav-container">
+
+<div class="logo">
+
+📚 STUDY COMMUNITY
+
+</div>
+
+<div class="menu">
+
+<a href="/">메인</a>
+
+<a href="/board">게시판</a>
+
+<% if(user){ %>
+
+<a href="/logout">
+
+로그아웃
+
+</a>
+
+<% } %>
+
+</div>
+
+</div>
+
+</div>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+
+<meta charset="UTF-8">
+
+<title>글쓰기</title>
+
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="ko">
+<head>
+
+<meta charset="UTF-8">
+
+<title>글쓰기</title>
+
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>✏️ 글쓰기</h1>
+
+<form action="/write" method="POST">
+
+<input
+
+type="text"
+
+name="title"
+
+placeholder="제목"
+
+required>
+
+<br><br>
+
+<textarea
+
+name="content"
+
+rows="15"
+
+placeholder="내용을 입력하세요."
+
+required>
+
+</textarea>
+
+<br><br>
+
+<button>
+
+등록
+
+</button>
+
+</form>
+
+<br>
+
+<a href="/board">
+
+<button>
+
+취소
+
+</button>
+
+</a>
+
+</div>
+
+</div>
+
+</body>
+<div class="navbar">
+
+<div class="nav-container">
+
+<div class="logo">
+
+📚 STUDY COMMUNITY
+
+</div>
+
+<div class="menu">
+
+<a href="/">메인</a>
+
+<a href="/board">게시판</a>
+
+<% if(user){ %>
+
+<a href="/logout">
+
+로그아웃
+
+</a>
+
+<% } %>
+
+</div>
+
+</div>
+
+</div>
+</html>
+
+<div class="container">
+
+<div class="card">
+
+<h1>✏️ 글쓰기</h1>
+
+<form action="/write" method="POST">
+
+<input
+
+type="text"
+
+name="title"
+
+placeholder="제목"
+
+required>
+
+<br><br>
+
+<textarea
+
+name="content"
+
+rows="15"
+
+placeholder="내용을 입력하세요."
+
+required>
+
+</textarea>
+
+<br><br>
+
+<button>
+
+등록
+
+</button>
+
+</form>
+
+<br>
+
+<a href="/board">
+
+<button>
+
+취소
+
+</button>
+
+</a>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

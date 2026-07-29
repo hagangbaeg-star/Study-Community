@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Study Community</title>
+
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>📚 STUDY COMMUNITY</h1>
+
+<% if(user){ %>
+
+<h3>
+안녕하세요,
+<strong><%= user.username %></strong>님!
+</h3>
+
+<a href="/board">
+<button>게시판</button>
+</a>
+
+<a href="/logout">
+<button>로그아웃</button>
+</a>
+
+<% }else{ %>
+
+<h3>스터디 커뮤니티에 오신 것을 환영합니다.</h3>
+
+<a href="/login">
+<button>로그인</button>
+</a>
+
+<a href="/register">
+<button>회원가입</button>
+</a>
+
+<% } %>
+
+</div>
+
+</div>
+
+</body>
+<div class="navbar">
+
+<div class="nav-container">
+
+<div class="logo">
+
+📚 STUDY COMMUNITY
+
+</div>
+
+<div class="menu">
+
+<a href="/">메인</a>
+
+<a href="/board">게시판</a>
+
+<% if(user){ %>
+
+<a href="/logout">
+
+로그아웃
+
+</a>
+
+<% } %>
+
+</div>
+
+</div>
+
+</div>
+</html>
