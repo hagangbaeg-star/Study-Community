@@ -48,15 +48,21 @@ app.post("/register", async (req, res) => {
         VALUES (?, ?, ?)
     `;
 
+    console.log("1");
+
     db.query(
         sql,
         [username, email, hashedPassword],
         (err, result) => {
 
+            console.log("2");
+
             if (err) {
                 console.log(err);
-                return res.send("회원가입 실패");
+                return res.send(err.message);
             }
+
+            console.log("3");
 
             res.send("회원가입 성공!");
         }
