@@ -8,13 +8,13 @@ const db = mysql.createConnection({
     database: process.env.DB_NAME,
     ssl: {
         rejectUnauthorized: false
-    },
-    connectTimeout: 10000
+    }
 });
 
 db.connect((err) => {
     if (err) {
-        console.error(err);
+        console.log("DB 연결 실패");
+        console.log(err);
     } else {
         console.log("DB 연결 성공");
     }
