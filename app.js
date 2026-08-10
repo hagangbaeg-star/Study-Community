@@ -26,9 +26,10 @@ app.use(session({
 // =========================
 
 const transporter = nodemailer.createTransport({
-    host: process.env.MAIL_HOST,
-    port: Number(process.env.MAIL_PORT),
+    host: "smtp.gmail.com",
+    port: 465,
     secure: true,
+    family: 4,
     auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASSWORD
