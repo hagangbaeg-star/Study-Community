@@ -6,7 +6,7 @@ const express = require("express");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
-const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
 
 const app = express();
 
@@ -22,19 +22,56 @@ app.use(session({
 }));
 
 // =========================
-// Gmail SMTP 설정
+// Gmail API 설정
 // =========================
 
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    family: 4,
-    auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASSWORD
-    }
+const oauth2Client = new google.auth.OAuth2(
+    process.env.GMAIL_CLIENT_ID,
+    process.env.GMAIL_CLIENT_SECRET
+);
+
+oauth2Client.setCredentials({
+    refresh_token: process.env.GMAIL_REFRESH_TOKEN
 });
+
+const gmail = google.gmail({
+    version: "v1",
+    auth: oauth2Client
+});
+
+// =========================
+// Gmail API로 OTP 이메일 보내기
+// =========================
+
+async function sendOTPEmail(to, otp) {
+
+    const message =
+        `From: ${process.env.GMAIL_USER}\r\n` +
+        `To: ${to}\r\n` +
+        `Subject: Study Community 이메일 인증번호\r\n` +
+        `Content-Type: text/plain; charset="UTF-8"\r\n` +
+        `\r\n` +
+        `안녕하세요.\r\n\r\n` +
+        `Study Community 회원가입 인증번호는 ${otp}입니다.\r\n\r\n` +
+        `인증번호는 5분 동안 유효합니다.`;
+
+    const encodedMessage = Buffer
+        .from(message, "utf-8")
+        .toString("base64")
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/, "");
+
+    const result = await gmail.users.messages.send({
+        userId: "me",
+        requestBody: {
+            raw: encodedMessage
+        }
+    });
+
+    console.log("OTP 이메일 전송 완료");
+    console.log("Gmail message ID:", result.data.id);
+}
 
 // =========================
 // 메인
@@ -74,7 +111,6 @@ app.post("/register", async (req, res) => {
         return res.send("모든 항목을 입력해주세요.");
     }
 
-    // 아이디 또는 이메일 중복 확인
     db.query(
         "SELECT * FROM users WHERE username = ? OR email = ?",
         [username, email],
@@ -94,7 +130,7 @@ app.post("/register", async (req, res) => {
                 // 비밀번호 암호화
                 const hashedPassword = await bcrypt.hash(password, 10);
 
-                // 6자리 OTP 생성
+                // 6자리 OTP
                 const otp = crypto
                     .randomInt(100000, 1000000)
                     .toString();
@@ -108,24 +144,15 @@ app.post("/register", async (req, res) => {
                     expires: Date.now() + 5 * 60 * 1000
                 };
 
-                // 이메일 전송
-                await transporter.sendMail({
-                    from: process.env.MAIL_USER,
-                    to: email,
-                    subject: "Study Community 이메일 인증번호",
-                    text:
-                        `안녕하세요.\n\n` +
-                        `Study Community 회원가입 인증번호는 ${otp}입니다.\n\n` +
-                        `인증번호는 5분 동안 유효합니다.`
-                });
-
-                console.log("OTP 이메일 전송 완료");
+                // Gmail API로 OTP 발송
+                await sendOTPEmail(email, otp);
 
                 res.redirect("/verify-email");
 
             } catch (error) {
 
-                console.log(error);
+                console.error("OTP 이메일 전송 실패:");
+                console.error(error);
 
                 delete req.session.registerData;
 
@@ -164,7 +191,7 @@ app.post("/verify-email", (req, res) => {
         return res.redirect("/register");
     }
 
-    // OTP 5분 만료
+    // 5분 만료
     if (Date.now() > data.expires) {
 
         delete req.session.registerData;
@@ -175,7 +202,7 @@ app.post("/verify-email", (req, res) => {
         `);
     }
 
-    // OTP 확인
+    // OTP 비교
     if (otp !== data.otp) {
 
         return res.send(`
@@ -288,7 +315,6 @@ app.get("/board", (req, res) => {
             posts: result,
             user: req.session.user
         });
-
     });
 
 });
@@ -306,7 +332,6 @@ app.get("/write", (req, res) => {
     res.render("write", {
         user: req.session.user
     });
-
 });
 
 // =========================
@@ -337,10 +362,8 @@ app.post("/write", (req, res) => {
             }
 
             res.redirect("/board");
-
         }
     );
-
 });
 
 // =========================
@@ -369,10 +392,8 @@ app.get("/post/:id", (req, res) => {
                 post: result[0],
                 user: req.session.user
             });
-
         }
     );
-
 });
 
 // =========================
@@ -407,10 +428,8 @@ app.get("/edit/:id", (req, res) => {
                 post: result[0],
                 user: req.session.user
             });
-
         }
     );
-
 });
 
 // =========================
@@ -432,10 +451,8 @@ app.post("/edit/:id", (req, res) => {
             }
 
             res.redirect("/post/" + req.params.id);
-
         }
     );
-
 });
 
 // =========================
@@ -455,16 +472,16 @@ app.post("/delete/:id", (req, res) => {
             }
 
             res.redirect("/board");
-
         }
     );
-
 });
 
 // =========================
 // 서버 실행
 // =========================
 
-app.listen(3000, () => {
-    console.log("http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`http://localhost:${PORT}`);
 });

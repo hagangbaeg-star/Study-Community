@@ -1,4 +1,6 @@
 node_modules/
 .env
 .env.py
+credentials.json
+token.json
 create_tables.js
